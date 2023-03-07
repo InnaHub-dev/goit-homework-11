@@ -18,13 +18,7 @@ class AddressBook(UserDict):
             raise MyException("This user isn't in the Book")
         user = self.data[name]
         return user
-    
-    def __next__(self, N = 3):
-        if len(self.data) > self.index:
-            self.index += N
-            return {name: self.data[name] for name in sorted(self.data.keys())[self.index - N:self.index]}    
-        raise StopIteration
-    
+        
     def __iter__(self):
         return self
  
@@ -39,16 +33,20 @@ class AddressBook(UserDict):
         except KeyError:
             return "This user isn't in the Book"
         
-    def iterator(self):
-        return next(self)
-
+    def iterator(self, N = 2):
+        if len(self.data) > self.index:
+            yield from [self.data[name] for name in sorted(self.data.keys())[self.index:self.index + N]]
+            self.index += N
+        else:
+            raise StopIteration
+            
     def show_records(self):
+        batch = self.iterator()
         try:
-            batch = self.iterator()
-        except StopIteration:
+            return "\n".join([record.show_record() for record in batch])
+        except RuntimeError:
             self.index = 0
-            return "the end"
-        return "\n".join([record.show_record() for record in batch.values()])
+            return 'the end'
             
 
 class Field:
