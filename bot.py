@@ -33,10 +33,10 @@ class AddressBook(UserDict):
         except KeyError:
             return "This user isn't in the Book"
         
-    def iterator(self, N = 2):
+    def iterator(self, n = 2):
         if len(self.data) > self.index:
-            yield from [self.data[name] for name in sorted(self.data.keys())[self.index:self.index + N]]
-            self.index += N
+            yield from [self.data[name] for name in sorted(self.data.keys())[self.index:self.index + n]]
+            self.index += n
         else:
             raise StopIteration
             
